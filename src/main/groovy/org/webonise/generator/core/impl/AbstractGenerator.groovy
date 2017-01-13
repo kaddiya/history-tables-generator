@@ -2,14 +2,11 @@ package org.webonise.generator.core.impl
 
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
-import groovy.xml.MarkupBuilder
-import groovy.xml.StreamingMarkupBuilder
 import org.apache.commons.lang3.StringUtils
 import org.webonise.generator.core.interfaces.IGenerator
 import org.webonise.generator.enums.DatabaseType
 import org.webonise.generator.factories.ConnectionStringFactory
 import org.webonise.generator.factories.DatabaseDriverNameFactory
-import org.webonise.generator.models.migrations.liquibase.Changeset
 import org.webonise.generator.models.migrations.liquibase.directories.ChangeLogOutput
 import org.webonise.generator.models.migrations.liquibase.directories.ChangeLogSQLDirectory
 import org.webonise.generator.models.migrations.liquibase.directories.OutputDirectory
@@ -26,7 +23,7 @@ abstract class AbstractGenerator implements IGenerator {
 
     protected final String DB_CONNECTION_STRING;
     protected final String TARGET_DATABASE;
-    protected final String DATABSE_USER;
+    protected final String DATABASE_USER;
     protected final String DATABASE_PASSWORD;
     protected final String METADATA_DB_NAME;
     protected final DatabaseType DATABASE_TYPE;
@@ -41,13 +38,13 @@ abstract class AbstractGenerator implements IGenerator {
 
         this.METADATA_DB_NAME = metadataDBName
         this.TARGET_DATABASE = System.getProperty("targetDatabaseName")
-        this.DATABSE_USER = System.getProperty("databaseUsername")
+        this.DATABASE_USER = System.getProperty("databaseUsername")
         this.DATABASE_PASSWORD = System.getProperty("databasePassword")
 
         assert DATABASE_TYPE : "Please specify a database type"
         assert METADATA_DB_NAME : "Please specify the database to lookup metadata"
-        assert DATABSE_USER  : "System property databaseUsername not specified"
-        assert DATABASE_PASSWORD :"System property databasePassword not specified"
+        assert DATABASE_USER  : "System property databaseUsername not specified"
+        assert DATABASE_PASSWORD != null :"System property databasePassword not specified"
         assert TARGET_DATABASE : "System property targetDatabaseName not specified"
 
         this.DRIVER_NAME = DatabaseDriverNameFactory.getDriverName(DATABASE_TYPE)
@@ -96,7 +93,7 @@ abstract class AbstractGenerator implements IGenerator {
     protected Connection getConnection(){
         if(connection == null){
             Class.forName(DRIVER_NAME);
-            this.connection = DriverManager.getConnection(DB_CONNECTION_STRING+ "?user="+DATABSE_USER+"&password="+DATABASE_PASSWORD);
+            this.connection = DriverManager.getConnection(DB_CONNECTION_STRING+ "?user="+DATABASE_USER+"&password="+DATABASE_PASSWORD);
         }
 
 
