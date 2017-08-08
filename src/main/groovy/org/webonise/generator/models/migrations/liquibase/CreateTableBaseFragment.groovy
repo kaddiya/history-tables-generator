@@ -14,7 +14,7 @@ class CreateTableBaseFragment {
            ),"varchar(255)",false,null),
            new ColumnFragment("REV_WHEN",Arrays.asList(
                    new Constraints(false,null,null)
-           ),"date",false,null),
+           ),"timestamp",false,null),
            new ColumnFragment("REV_WHY",Arrays.asList(
                    new Constraints(false,null,null)
            ),"varchar(255)",false,""),
